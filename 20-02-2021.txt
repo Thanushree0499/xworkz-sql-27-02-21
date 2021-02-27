@@ -1,0 +1,240 @@
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| amusementparks     |
+| flightdetails      |
+| information_schema |
+| mobiles            |
+| mysql              |
+| nykaa              |
+| online_batch       |
+| performance_schema |
+| rosepetalsbotique  |
+| sakila             |
+| sys                |
+| world              |
+| xworkz             |
++--------------------+
+13 rows in set (0.03 sec)
+
+mysql> create database sale;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use sale;
+Database changed
+mysql> show tables;
+Empty set (0.01 sec)
+mysql> create table dept(
+    -> deptno int not null primary key,
+    -> deptname varchar(20) not null,
+    -> location varchar(20) not null
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc dept
+    -> ;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| deptno   | int         | NO   | PRI | NULL    |       |
+| deptname | varchar(20) | NO   |     | NULL    |       |
+| location | varchar(20) | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+mysql> create table emp(
+    -> empno int not null primary key,
+    -> empname varchar(20) not null,
+    -> job varchar(20) not null,
+    -> mgr int,
+    -> hiredate date,
+    -> salary decimal(10,2),
+    -> comm decimal(10,2),
+    -> deptno int,
+    -> foreign key(deptno) references dept(deptno)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc emp;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| empno    | int           | NO   | PRI | NULL    |       |
+| empname  | varchar(20)   | NO   |     | NULL    |       |
+| job      | varchar(20)   | NO   |     | NULL    |       |
+| mgr      | int           | YES  |     | NULL    |       |
+| hiredate | date          | YES  |     | NULL    |       |
+| salary   | decimal(10,2) | YES  |     | NULL    |       |
+| comm     | decimal(10,2) | YES  |     | NULL    |       |
+| deptno   | int           | YES  | MUL | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+8 rows in set (0.02 sec)
+
+mysql> insert into sales.dept(deptno,deptname,location) values(10,administration,bangalore),(20,sales,pune);
+ERROR 1049 (42000): Unknown database 'sales'
+mysql> use sales;
+ERROR 1049 (42000): Unknown database 'sales'
+mysql> use sale;
+Database changed
+mysql> insert into sale.dept(deptno,deptname,location) values(10,Administration,Bangalore),(20,Marketing,Pune);
+ERROR 1054 (42S22): Unknown column 'Administration' in 'field list'
+mysql> insert into sale.dept(deptno,deptname,location) values(10,'Administration','Bangalore'),(20,'Marketing','Pune');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into sale.dept(deptno,deptname,location) values(30,'Sales','Chennai'),(40,'Human Resources','Bangalore'),(50,'Marketing','Chennai');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| deptno   | int         | NO   | PRI | NULL    |       |
+| deptname | varchar(20) | NO   |     | NULL    |       |
+| location | varchar(20) | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> select * from sale.dept;
++--------+-----------------+-----------+
+| deptno | deptname        | location  |
++--------+-----------------+-----------+
+|     10 | Administration  | Bangalore |
+|     20 | Marketing       | Pune      |
+|     30 | Sales           | Chennai   |
+|     40 | Human Resources | Bangalore |
+|     50 | Marketing       | Chennai   |
++--------+-----------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> desc emp;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| empno    | int           | NO   | PRI | NULL    |       |
+| empname  | varchar(20)   | NO   |     | NULL    |       |
+| job      | varchar(20)   | NO   |     | NULL    |       |
+| mgr      | int           | YES  |     | NULL    |       |
+| hiredate | date          | YES  |     | NULL    |       |
+| salary   | decimal(10,2) | YES  |     | NULL    |       |
+| comm     | decimal(10,2) | YES  |     | NULL    |       |
+| deptno   | int           | YES  | MUL | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> insert into sale.emp(empno,empname,job,mgr,hiredate,salary,comm,deptno) values(100,'thanushree','manager',23,20/01/2017,12550.0,1000.0,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into sale.emp(empno,empname,job,mgr,hiredate,salary,comm,deptno) values(102,'surabhi','manager',25,13/07/2018,11500.0,500.0,20),(104,'shruthi','analyst',21,07/04/2017,14500.00,400.00,20),(106,'chintana','salesperson',20,24/09/2016,15000.00,1000.00,30),(108,'ananya','salesperson',31,19/06/2015,20000.00,500.00,50);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp;
++-------+------------+-------------+------+------------+----------+---------+--------+
+| empno | empname    | job         | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+-------------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager     |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager     |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   104 | shruthi    | analyst     |  100 | 2018-04-22 | 14500.00 |  400.00 |     20 |
+|   106 | chintana   | salesperson |  104 | 2018-10-29 | 15000.00 |    NULL |     30 |
+|   108 | ananya     | salesperson |  102 | 2017-08-30 | 20000.00 |  500.00 |     50 |
++-------+------------+-------------+------+------------+----------+---------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno in(20,30);
++-------+----------+-------------+------+------------+----------+--------+--------+
+| empno | empname  | job         | mgr  | hiredate   | salary   | comm   | deptno |
++-------+----------+-------------+------+------------+----------+--------+--------+
+|   102 | surabhi  | manager     |  108 | 2016-03-16 | 11500.00 | 500.00 |     20 |
+|   104 | shruthi  | analyst     |  100 | 2018-04-22 | 14500.00 | 400.00 |     20 |
+|   106 | chintana | salesperson |  104 | 2018-10-29 | 15000.00 |   NULL |     30 |
++-------+----------+-------------+------+------------+----------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp where job in ('manager','analyst');
++-------+------------+---------+------+------------+----------+---------+--------+
+| empno | empname    | job     | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+---------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   104 | shruthi    | analyst |  100 | 2018-04-22 | 14500.00 |  400.00 |     20 |
++-------+------------+---------+------+------------+----------+---------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp where job like'm%';
++-------+------------+---------+------+------------+----------+---------+--------+
+| empno | empname    | job     | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+---------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
++-------+------------+---------+------+------------+----------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp where job like 'a%';
++-------+---------+---------+------+------------+----------+--------+--------+
+| empno | empname | job     | mgr  | hiredate   | salary   | comm   | deptno |
++-------+---------+---------+------+------------+----------+--------+--------+
+|   104 | shruthi | analyst |  100 | 2018-04-22 | 14500.00 | 400.00 |     20 |
++-------+---------+---------+------+------------+----------+--------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where job like '%a%a%';
++-------+------------+---------+------+------------+----------+---------+--------+
+| empno | empname    | job     | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+---------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   104 | shruthi    | analyst |  100 | 2018-04-22 | 14500.00 |  400.00 |     20 |
++-------+------------+---------+------+------------+----------+---------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from where job like '_a%';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where job like '_a%'' at line 1
+mysql> select * from emp where job like '_a%';
++-------+------------+-------------+------+------------+----------+---------+--------+
+| empno | empname    | job         | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+-------------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager     |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager     |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   106 | chintana   | salesperson |  104 | 2018-10-29 | 15000.00 |    NULL |     30 |
+|   108 | ananya     | salesperson |  102 | 2017-08-30 | 20000.00 |  500.00 |     50 |
++-------+------------+-------------+------+------------+----------+---------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp where salary between 10000 and 20000;
++-------+------------+-------------+------+------------+----------+---------+--------+
+| empno | empname    | job         | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+-------------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager     |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager     |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   104 | shruthi    | analyst     |  100 | 2018-04-22 | 14500.00 |  400.00 |     20 |
+|   106 | chintana   | salesperson |  104 | 2018-10-29 | 15000.00 |    NULL |     30 |
+|   108 | ananya     | salesperson |  102 | 2017-08-30 | 20000.00 |  500.00 |     50 |
++-------+------------+-------------+------+------------+----------+---------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp where comm=null;
+Empty set (0.00 sec)
+
+mysql> select * from emp where comm is null;
++-------+----------+-------------+------+------------+----------+------+--------+
+| empno | empname  | job         | mgr  | hiredate   | salary   | comm | deptno |
++-------+----------+-------------+------+------------+----------+------+--------+
+|   106 | chintana | salesperson |  104 | 2018-10-29 | 15000.00 | NULL |     30 |
++-------+----------+-------------+------+------------+----------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where comm is not null;
++-------+------------+-------------+------+------------+----------+---------+--------+
+| empno | empname    | job         | mgr  | hiredate   | salary   | comm    | deptno |
++-------+------------+-------------+------+------------+----------+---------+--------+
+|   100 | thanushree | manager     |  106 | 2018-04-02 | 12550.00 | 1000.00 |     10 |
+|   102 | surabhi    | manager     |  108 | 2016-03-16 | 11500.00 |  500.00 |     20 |
+|   104 | shruthi    | analyst     |  100 | 2018-04-22 | 14500.00 |  400.00 |     20 |
+|   108 | ananya     | salesperson |  102 | 2017-08-30 | 20000.00 |  500.00 |     50 |
++-------+------------+-------------+------+------------+----------+---------+--------+
+4 rows in set (0.00 sec)
+
+
